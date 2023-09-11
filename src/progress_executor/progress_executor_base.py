@@ -79,19 +79,6 @@ class ProgressFuture(concurrent.futures.Future):
 
     async def check_for_progress(self, sleep_duration=0.1):
         raise NotImplementedError
-        try:
-            first = True
-            while not self.done():
-                if self.progress_ev.is_set() or first:
-                    self.old_progress_info["n"], self.old_progress_info["total"], self.old_progress_info["status"] = self.progress_info["n"], self.progress_info["total"], self.progress_info["status"]
-                    self._process_progress()
-                    self.progress_ev.clear()
-                await asyncio.sleep(sleep_duration)
-                first = False
-            return self.result()
-        except asyncio.CancelledError:
-            self.cancel()
-            raise
 
 
     def add_tqdm_callback(self, tqdm_cls, init_kwargs={}, triggers: Set[Literal["now", "running", "cancelled"]] = {"now"}):
