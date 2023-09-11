@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='___package_name___',
+    name='progress_task_executor',
     packages=find_packages(where='src'),
     package_data={
-        "___package_name___.package_data": ["*"],
+        "progress_task_executor.package_data": ["*"],
     },
     entry_points={
         'console_scripts': [
-            '___package_name___ = ___package_name___:run',
+            'progress_task_executor = progress_task_executor:run',
         ]
     },
     version='0.1',
@@ -18,8 +18,8 @@ setup(
     description_file = "README.md",
     author="Julien Braine",
     author_email='julienbraine@yahoo.fr',
-    url='https://github.com/JulienBrn/___package_name___',
-    download_url = 'https://github.com/JulienBrn/___package_name___.git',
+    url='https://github.com/JulienBrn/progress_task_executor',
+    download_url = 'https://github.com/JulienBrn/progress_task_executor.git',
     package_dir={'': 'src'},
     keywords=['python'],
     install_requires=[],
