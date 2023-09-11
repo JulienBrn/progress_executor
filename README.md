@@ -35,3 +35,9 @@ This means that the main thread should be running as asyncio loop (this is proba
 
 ## The case of the "sync" executor
 
+# API
+
+## API for submitted functions tasks
+
+## API to submit these functions as tasks
+
