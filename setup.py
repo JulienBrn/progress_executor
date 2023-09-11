@@ -9,7 +9,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'progress_executor = progress_task_executor:run',
+            'progress_executor = progress_executor:run',
         ]
     },
     version='0.1',
