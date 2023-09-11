@@ -1,3 +1,5 @@
-from progress_executor.progress_executor import ThreadPoolProgressExecutor, ProcessPoolProgressExecutor, Updater
+from progress_executor.progress_executor_base import ProgressFuture, ProgressExecutor, Updater
+from progress_executor.pool_progress_executor import ThreadPoolProgressExecutor, ProcessPoolProgressExecutor
+from progress_executor.sync_progress_executor import SyncProgressExecutor
 from progress_executor.main import run
 

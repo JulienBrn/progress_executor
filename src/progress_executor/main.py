@@ -38,8 +38,8 @@ def f(n, progress: Updater):
 
 tp = ThreadPoolProgressExecutor(max_workers =3)
 pp = ProcessPoolProgressExecutor(max_workers =3)
-
-executor = tp
+se = SyncProgressExecutor()
+executor = se
 
 
 async def main():
