@@ -40,7 +40,7 @@ This means that the main thread should be running as asyncio loop (this is proba
 
 Our executors inherit for the concurrent.futures.Executor. We provide three executors that can be created (for example) with the following lines:
 
-```
+```python
 from progress_executor import ThreadPoolProgressExecutor, ProcessPoolProgressExecutor, SyncProgressExecutor
 
 tp = ThreadPoolProgressExecutor(max_workers =3)

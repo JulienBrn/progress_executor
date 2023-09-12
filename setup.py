@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from pathlib import Path
 
 
 setup(
@@ -12,10 +13,11 @@ setup(
             'progress_executor = progress_executor:run',
         ]
     },
-    version='0.1',
+    version='0.2',
     license='MIT',
-    description = 'My package description',
-    description_file = "README.md",
+    description = 'Subclasses of concurrent.future.Executor that correctly handle cancelling and progress',
+    long_description = (Path(".") / "README.md").read_text(),
+    long_description_content_type='text/markdown',
     author="Julien Braine",
     author_email='julienbraine@yahoo.fr',
     url='https://github.com/JulienBrn/progress_executor',
