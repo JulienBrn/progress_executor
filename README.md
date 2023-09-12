@@ -1,7 +1,7 @@
 # Known Issues
 
 We believe the current version of tqdm has a bug when the number of instances decreases. 
-If you are using future.add_tqdm_callback for progress, you should modify the _decr_instances method in tqdm/std.py line 690 of tqdm as described in [this issue](https://github.com/tqdm/tqdm/issues/1496):
+If you are using future.add_tqdm_callback for progress, you should modify the _decr_instances method in tqdm/std.py line 690 of tqdm to the following (as described in [this issue](https://github.com/tqdm/tqdm/issues/1496)):
 
 
 ```python
