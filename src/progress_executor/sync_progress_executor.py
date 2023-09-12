@@ -31,21 +31,32 @@ class SyncProgressFuture(ProgressFuture):
         signal.signal(signal.SIGINT, signal.default_int_handler)
         progress=SyncUpdater(self)
         try:
-            res = self.f(*self.args, progress=progress , **self.kwargs)
-            progress.status = f"done, exception={isinstance(res, BaseException)}"
-            progress.refresh()
+            try:
+                res = self.f(*self.args, progress=progress , **self.kwargs)
+            except Exception as e:
+                res = e
+                is_exception =True
+            except:
+                raise
+            else:
+                is_exception =False
+            finally:
+                progress.status = f"done, exception={is_exception}"
         except KeyboardInterrupt:
-            signal.signal(signal.SIGINT, old_handler)
             old_handler(None, None)
             self.cancel()
             progress.refresh()
             raise
-        except:
+        else:
+            progress.refresh()
+            if is_exception:
+                self.set_exception(res)
+                return res
+            else:
+                self.set_result(res)
+                raise res
+        finally:
             signal.signal(signal.SIGINT, old_handler)
-            raise
-        self.set_result(res)
-        progress.refresh()
-        return res    
 
 class SyncProgressExecutor(ProgressExecutor):
     def __init__(self, *args, **kwargs):

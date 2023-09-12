@@ -67,6 +67,7 @@ def make_f(f, *args, cancel_ev, progress_ev, progress_info, **kwargs):
         res = ProgressExecutor.add_progress_arg(f)(*args, progress = updater, **kwargs)
         updater.status = f"done, exception={isinstance(res, BaseException)}"
     except:
+        updater.status = f"done, exception={True}"
         raise
     finally:
         updater.close()
