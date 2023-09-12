@@ -22,6 +22,6 @@ setup(
     download_url = 'https://github.com/JulienBrn/progress_executor.git',
     package_dir={'': 'src'},
     keywords=['python'],
-    install_requires=["beautifullogger"],
+    install_requires=["beautifullogger", "tqdm"],
     python_requires=">=3.11"
 )

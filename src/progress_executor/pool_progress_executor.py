@@ -64,8 +64,8 @@ class PoolProgressFuture(ProgressFuture):
 def make_f(f, *args, cancel_ev, progress_ev, progress_info, **kwargs):
     updater = PoolUpdater(cancel_ev, progress_ev, progress_info)
     try:
-        res = f(*args, progress = updater, **kwargs)
-        updater.status = "done"
+        res = ProgressExecutor.add_progress_arg(f)(*args, progress = updater, **kwargs)
+        updater.status = f"done, exception={isinstance(res, BaseException)}"
     except:
         raise
     finally:

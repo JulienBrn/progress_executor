@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Dict, Any, List, Callable, Literal, Optional, Tuple, Set, TypedDict, NoReturn, TYPE_CHECKING
-import concurrent, threading, time, asyncio, time, functools, signal
+import concurrent, threading, time, asyncio, time, functools, signal, inspect, tqdm
 
 class ProgressInfo(TypedDict):
     n: int | float
@@ -81,7 +81,7 @@ class ProgressFuture(concurrent.futures.Future):
         raise NotImplementedError
 
 
-    def add_tqdm_callback(self, tqdm_cls, init_kwargs={}, triggers: Set[Literal["now", "running", "cancelled"]] = {"now"}):
+    def add_tqdm_callback(self, tqdm_cls= tqdm.tqdm, init_kwargs={}, triggers: Set[Literal["now", "running", "cancelled"]] = {"now"}):
         instance = []
         def callback(old, new):
             nonlocal instance
@@ -102,3 +102,13 @@ class ProgressFuture(concurrent.futures.Future):
 class ProgressExecutor(concurrent.futures.Executor):
     def submit(self, f, *args, **kwargs) -> ProgressFuture:
         raise NotImplementedError("Abstract submit method")
+    
+    @staticmethod
+    def add_progress_arg(f):
+        
+        def with_progress(*args, progress, **kwargs):
+            return f(*args, **kwargs)
+        if "progress"not in inspect.signature(f).parameters.keys():
+            return with_progress
+        else: 
+            return f

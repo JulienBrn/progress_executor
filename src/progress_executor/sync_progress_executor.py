@@ -32,7 +32,7 @@ class SyncProgressFuture(ProgressFuture):
         progress=SyncUpdater(self)
         try:
             res = self.f(*self.args, progress=progress , **self.kwargs)
-            progress.status="done"
+            progress.status = f"done, exception={isinstance(res, BaseException)}"
             progress.refresh()
         except KeyboardInterrupt:
             signal.signal(signal.SIGINT, old_handler)
@@ -54,7 +54,7 @@ class SyncProgressExecutor(ProgressExecutor):
         self.tasks=[]
         self.handlers =()
     def submit(self, f, *args, **kwargs) -> ProgressFuture:
-        t= SyncProgressFuture(f, args, kwargs)
+        t= SyncProgressFuture(ProgressExecutor.add_progress_arg(f), args, kwargs)
         self.tasks.append(t)
         return t
     
