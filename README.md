@@ -1,3 +1,48 @@
+# Known Issues
+
+We believe the current version of tqdm has a bug when the number of instances decreases. 
+If you are using future.add_tqdm_callback for progress, you should modify the _decr_instances method in tqdm/std.py line 690 of tqdm as described in [this issue](https://github.com/tqdm/tqdm/issues/1496):
+
+
+```python
+@classmethod
+def _decr_instances(cls, instance):
+    """
+    Remove from list and reposition another unfixed bar
+    to fill the new gap.
+
+    This means that by default (where all nested bars are unfixed),
+    order is not maintained but screen flicker/blank space is minimised.
+    (tqdm<=4.44.1 moved ALL subsequent unfixed bars up.)
+    """
+    with cls._lock:
+        try:
+            cls._instances.remove(instance)
+        except KeyError:
+            # if not instance.gui:  # pragma: no cover
+            #     raise
+            pass  # py2: maybe magically removed already
+        # else:
+        if not instance.gui:
+            #CUSTOM Addition
+            for inst in cls._instances:
+                pos = getattr(inst, "pos", 0)
+                adjust = 1 if pos < 0 else -1
+                if pos and abs(pos) > abs(instance.pos):
+                    inst.pos += adjust
+            #END of CUSTOM Addition
+            last = (instance.nrows or 20) - 1
+            # find unfixed (`pos >= 0`) overflow (`pos >= nrows - 1`)
+            instances = list(filter(
+                lambda i: hasattr(i, "pos") and last <= i.pos,
+                cls._instances))
+            # set first found to current `pos`
+            if instances:
+                inst = min(instances, key=lambda i: i.pos)
+                inst.clear(nolock=True)
+                inst.pos = abs(instance.pos)
+```
+
 # Motivation
 
 While Concurrent.futures enables one to seemlessly launch with different executors ([threadpool and processpool](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ProcessPoolExecutor)) the same code,
@@ -6,6 +51,9 @@ it is non trivial to add the two following features:
 2. Handling progress of a task from elsewhere (i.e. one can print a tqdm bar within the task, but what if one wishes to aggregate progress from different tasks?)
 
 Furthermore, we additionally add a new executor that behaves in "sync" (no threads, no processes) for testing purposes
+
+A full example is provided at the bottom of this page.
+
 
 
 # Problem
