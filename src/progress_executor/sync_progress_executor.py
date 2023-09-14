@@ -36,16 +36,17 @@ class SyncProgressFuture(ProgressFuture):
             except Exception as e:
                 res = e
                 is_exception =True
-            except:
+            except KeyboardInterrupt:
+                is_exception=False
                 raise
             else:
                 is_exception =False
             finally:
                 progress.status = f"done, exception={is_exception}"
         except KeyboardInterrupt:
-            old_handler(None, None)
             self.cancel()
             progress.refresh()
+            old_handler(None, None)
             raise
         else:
             progress.refresh()
@@ -54,7 +55,6 @@ class SyncProgressFuture(ProgressFuture):
                 return res
             else:
                 self.set_result(res)
-                raise res
         finally:
             signal.signal(signal.SIGINT, old_handler)
 
@@ -65,9 +65,12 @@ class SyncProgressExecutor(ProgressExecutor):
         self.tasks=[]
         self.handlers =()
     def submit(self, f, *args, **kwargs) -> ProgressFuture:
-        t= SyncProgressFuture(ProgressExecutor.add_progress_arg(f), args, kwargs)
-        self.tasks.append(t)
-        return t
+        if not self.shutdowned:
+            t= SyncProgressFuture(ProgressExecutor.add_progress_arg(f), args, kwargs)
+            self.tasks.append(t)
+            return t
+        else:
+            raise asyncio.CancelledError()
     
     def declare_handlers(self, default_handlers, loop_handler):
         self.handlers= (default_handlers, loop_handler)

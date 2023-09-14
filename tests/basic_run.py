@@ -25,7 +25,7 @@ def f(n, progress: Updater):
 tp = ThreadPoolProgressExecutor(max_workers =3)
 pp = ProcessPoolProgressExecutor(max_workers =3)
 se = SyncProgressExecutor()
-executor = tp
+executor = se
 
 
 async def main():
@@ -38,8 +38,8 @@ async def main():
                     fut = executor.submit(f, val)
                     fut.add_tqdm_callback(tqdm.tqdm, dict(desc=f"Task {i}"), triggers=["now", "running", "cancelled"])
                     tasks.append(tg.create_task(fut.check_for_progress()))
-                await asyncio.sleep(2)
-                tasks[0].cancel()
+                # await asyncio.sleep(2)
+                # tasks[0].cancel()
     except asyncio.CancelledError: pass
     finally:
         print("FINISHED")

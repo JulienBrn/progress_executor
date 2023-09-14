@@ -13,7 +13,7 @@ setup(
             'progress_executor = progress_executor:run',
         ]
     },
-    version='0.2',
+    version='0.3',
     license='MIT',
     description = 'Subclasses of concurrent.future.Executor that correctly handle cancelling and progress',
     long_description = (Path(".") / "README.md").read_text(),
