@@ -55,6 +55,7 @@ class SyncProgressFuture(ProgressFuture):
                 return res
             else:
                 self.set_result(res)
+                return res
         finally:
             signal.signal(signal.SIGINT, old_handler)
 
